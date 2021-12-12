@@ -59,8 +59,6 @@ namespace BookShopAPI.Controllers
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Users>> Put(int id, Users user)
         {
-            Request.Headers.TryGetValue("oldPwd", out var oldPwd);
-            
             if (id != user.UserId)
             {
                 return BadRequest();
@@ -70,10 +68,7 @@ namespace BookShopAPI.Controllers
             {
                 return NotFound();
             }
-            if (!a.Password.Equals(Utilities.HashMD5(oldPwd)))
-            {
-                return BadRequest("Invalid Password");
-            }
+     
 
             a.Username = user.Username;
             a.Password = Utilities.HashMD5(user.Password);

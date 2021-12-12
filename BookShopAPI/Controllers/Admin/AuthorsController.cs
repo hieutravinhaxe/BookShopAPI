@@ -41,7 +41,7 @@ namespace BookShopAPI.Controllers.Admin
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
 
-            return StatusCode(201, "Add cate success");
+            return StatusCode(201, "Add author success");
         }
 
         // PUT api/<AuthorsController>/5
@@ -84,7 +84,7 @@ namespace BookShopAPI.Controllers.Admin
             _context.Authors.Update(a);
             await _context.SaveChangesAsync();
 
-            return StatusCode(200, "Disable authors success");
+            return StatusCode(200, "Disable author success");
         }
     }
 }

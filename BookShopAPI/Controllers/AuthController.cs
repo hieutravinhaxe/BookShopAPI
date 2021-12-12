@@ -2,6 +2,7 @@
 using BookShopAPI.Helpers;
 using BookShopAPI.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -81,8 +82,9 @@ namespace BookShopAPI.Controllers
             return StatusCode(201, "register success");
         }
 
-        [HttpPost("update-profile")]
-        public async Task<ActionResult<Users>> PostResetPassword(int id,Users u)
+        [Authorize]
+        [HttpPost("profile/{id}")]
+        public async Task<ActionResult<Users>> PostProfile(int id,Users u)
         {
             Request.Headers.TryGetValue("oldPwd", out var oldPwd);
 
@@ -90,6 +92,7 @@ namespace BookShopAPI.Controllers
             {
                 return BadRequest();
             }
+            
             Users a = await _context.Users.FindAsync(id);
             if (a == null)
             {
@@ -105,6 +108,15 @@ namespace BookShopAPI.Controllers
             if (a.UserId != Id)
             {
                 return NotFound();
+            }
+            
+            if(a.Email != u.Email)
+            {
+                Users uEmail = _context.Users.Where(u => u.Email == u.Email).FirstOrDefault();
+                if (uEmail != null)
+                {
+                    return BadRequest("Email have been exist");
+                }
             }
 
             a.Username = u.Username;

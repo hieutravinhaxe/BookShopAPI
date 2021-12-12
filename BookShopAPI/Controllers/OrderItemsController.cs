@@ -73,7 +73,7 @@ namespace BookShopAPI.Controllers
             Orders o = await _context.Orders.FindAsync(item.OrderId);
             Books b = await _context.Books.FindAsync(item.BookId);
 
-            if(o == null || b == null)
+            if(o == null || b == null || o.Active==false)
             {
                 return BadRequest();
             }
@@ -106,13 +106,18 @@ namespace BookShopAPI.Controllers
             }
             Orders o = await _context.Orders.FindAsync(item.OrderId);
             Books b = await _context.Books.FindAsync(item.BookId);
-            if (o == null || b == null)
+            if (o == null || b == null || o.Active==false || o.Verify==true)
             {
                 return BadRequest();
             }
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             int Id = int.Parse(userId);
 
+            Orders oBeenEdit = await _context.Orders.FindAsync(a.OrderId);
+            if (oBeenEdit.UserId != Id)
+            {
+                return NotFound();
+            }
             if (o.UserId != Id)
             {
                 return BadRequest();
@@ -143,7 +148,7 @@ namespace BookShopAPI.Controllers
             int Id = int.Parse(userId);
 
             Orders o = await _context.Orders.FindAsync(a.OrderId);
-            if (o.UserId != Id)
+            if (o.UserId != Id || o.Active==false || o.Verify==true)
             {
                 return BadRequest();
             }

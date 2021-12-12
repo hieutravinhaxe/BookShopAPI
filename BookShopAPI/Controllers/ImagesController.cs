@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookShopAPI.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class ImagesController : ControllerBase

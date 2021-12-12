@@ -65,7 +65,7 @@ namespace BookShopAPI.Controllers.Admin
             _context.Orders.Update(a);
             await _context.SaveChangesAsync();
 
-            return StatusCode(200, "Update item success");
+            return StatusCode(200, "Update order success");
 
         }
 
@@ -73,7 +73,7 @@ namespace BookShopAPI.Controllers.Admin
         public async Task<ActionResult<Orders>> Delete(int id)
         {
             Orders a = await _context.Orders.FindAsync(id);
-            if (a == null || a.Active == false)
+            if (a == null)
             {
                 return NotFound();
             }
@@ -82,7 +82,7 @@ namespace BookShopAPI.Controllers.Admin
             _context.Orders.Update(a);
             await _context.SaveChangesAsync();
 
-            return StatusCode(200, "Disable item success");
+            return StatusCode(200, "Disable order success");
         }
     }
 }

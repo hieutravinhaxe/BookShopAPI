@@ -24,17 +24,33 @@ namespace BookShopAPI.Controllers
             _context = context;
         }
         // GET: api/<ReviewsController>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reviews>>> Get()
+        [HttpGet("books/{id}")]
+        public async Task<ActionResult<IEnumerable<Reviews>>> GetReviewOfBook(int id)
         {
-            return await _context.Reviews.ToListAsync();
+            //return await _context.Reviews.ToListAsync();
+            Books b = await _context.Books.FindAsync(id);
+            if(b == null || b.Active == false)
+            {
+                return NotFound();
+            }
+            return await _context.Reviews.Where(r => r.BookId==id).ToListAsync();
         }
 
         // GET api/<ReviewsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reviews>> Get(int id)
         {
-            return await _context.Reviews.FindAsync(id);
+            Reviews r = await _context.Reviews.FindAsync(id);
+            if(r == null)
+            {
+                return NotFound();
+            }
+            Books b = await _context.Books.FindAsync(r.BookId);
+            if(b == null || b.Active == false)
+            {
+                return NotFound();
+            }
+            return r;
         }
 
         // POST api/<ReviewsController>
@@ -44,6 +60,12 @@ namespace BookShopAPI.Controllers
             Books b = await _context.Books.FindAsync(item.BookId);
             Users u = await _context.Users.FindAsync(item.UserId);
             if (u == null || b == null)
+            {
+                return BadRequest();
+            }
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            int Id = int.Parse(userId);
+            if (item.UserId != Id)
             {
                 return BadRequest();
             }

@@ -51,22 +51,22 @@ namespace BookShopAPI.Controllers.Admin
         }
 
         // POST api/<OrderItemsController>
-        [HttpPost("add")]
-        public async Task<ActionResult<OrderItems>> Post(OrderItems item)
-        {
-            Orders o = await _context.Orders.FindAsync(item.OrderId);
-            Books b = await _context.Books.FindAsync(item.BookId);
+        //[HttpPost("add")]
+        //public async Task<ActionResult<OrderItems>> Post(OrderItems item)
+        //{
+        //    Orders o = await _context.Orders.FindAsync(item.OrderId);
+        //    Books b = await _context.Books.FindAsync(item.BookId);
 
-            if (o == null || b == null)
-            {
-                return BadRequest();
-            }
+        //    if (o == null || b == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.OrderItems.Add(item);
-            await _context.SaveChangesAsync();
+        //    _context.OrderItems.Add(item);
+        //    await _context.SaveChangesAsync();
 
-            return StatusCode(201, "Add item success");
-        }
+        //    return StatusCode(201, "Add item success");
+        //}
 
         // PUT api/<OrderItemsController>/5
         [HttpPut("update/{id}")]

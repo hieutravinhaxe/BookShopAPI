@@ -96,7 +96,7 @@ namespace BookShopAPI.Controllers.Admin
             Categories cate = await _context.Categories.FindAsync(b.CategoryId);
             if (author == null || cate == null || id!=b.BookId)
             {
-                return BadRequest("id");
+                return BadRequest();
             }
             Books book = await _context.Books.FindAsync(id);
             if (book == null)

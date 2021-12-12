@@ -74,7 +74,7 @@ namespace BookShopAPI.Controllers
             _context.Orders.Add(o);
             await _context.SaveChangesAsync();
 
-            return StatusCode(201, "Add item success");
+            return StatusCode(201, "Add order success");
         }
 
         // PUT api/<OrdersController>/5
@@ -89,9 +89,13 @@ namespace BookShopAPI.Controllers
                 return BadRequest();
             }
             Orders a = await _context.Orders.FindAsync(id);
-            if (a == null)
+            if (a == null || a.Active==false)
             {
                 return NotFound();
+            }
+            if(a.Verify == true)
+            {
+                return BadRequest();
             }
             Users u = await _context.Users.FindAsync(order.UserId);
             if (u == null)
@@ -113,7 +117,7 @@ namespace BookShopAPI.Controllers
             _context.Orders.Update(a);
             await _context.SaveChangesAsync();
 
-            return StatusCode(200, "Update item success");
+            return StatusCode(200, "Update order success");
 
         }
 
@@ -121,12 +125,15 @@ namespace BookShopAPI.Controllers
         [HttpDelete("disable/{id}")]
         public async Task<ActionResult<Orders>> Delete(int id)
         {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            int Id = int.Parse(userId);
+
             Orders a = await _context.Orders.FindAsync(id);
             if (a == null || a.Active == false)
             {
                 return NotFound();
             }
-            if(a.Verify == true)
+            if(a.Verify == true || a.UserId!=Id)
             {
                 return BadRequest();
             }
@@ -136,7 +143,7 @@ namespace BookShopAPI.Controllers
             _context.Orders.Update(a);
             await _context.SaveChangesAsync();
 
-            return StatusCode(200, "Disable item success");
+            return StatusCode(200, "Disable order success");
         }
     }
 }
